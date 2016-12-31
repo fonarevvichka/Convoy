@@ -88,8 +88,8 @@ public class loginActivity extends AppCompatActivity implements
     private void logIn(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            Intent intent = new Intent(this, placeHolderActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, placeHolderActivity.class);
+//            startActivity(intent);
         }
     }
 }
