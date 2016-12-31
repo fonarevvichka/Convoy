@@ -1,6 +1,5 @@
-package com.fonarev.Convoy;
+package com.fonarev.convoy;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,16 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.fonarev.Convoy.R;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class loginTest extends AppCompatActivity implements
+public class loginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
@@ -26,7 +23,6 @@ public class loginTest extends AppCompatActivity implements
 
     private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +71,8 @@ public class loginTest extends AppCompatActivity implements
         }
     }
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d("Your sign in was: ", "handleSignInResult: " + result.isSuccess());
         if(result.isSuccess()) {
-            GoogleSignInAccount currrentUser = result.getSignInAccount();
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, currrentUser.getDisplayName()));
-            updateUI(true);
+            logIn(true);
         }
     }
     @Override
@@ -88,9 +81,11 @@ public class loginTest extends AppCompatActivity implements
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
-    private void updateUI(boolean signedIn) {
+    private void logIn(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+            Intent intent = new Intent(this, placeHolderActivity.class);
+            startActivity(intent);
         }
     }
 }
