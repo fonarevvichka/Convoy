@@ -1,6 +1,8 @@
 package com.fonarev.convoy;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,6 +30,8 @@ public class loginActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
         mStatusTextView = (TextView) findViewById(R.id.status);
 
         // Button listeners
