@@ -1,4 +1,4 @@
-package com.fonarev.convoy;
+package com.fonarev.Convoy;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
