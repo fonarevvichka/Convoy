@@ -41,3 +41,8 @@ captures/
 
 # .json files
 *.json
+
+# .idea/
+.idea/libraries/
+app/src/debug/
+app/src/release/

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.fonarev.Convoy"
+        applicationId "com.fonarev.convoy"
         minSdkVersion 24
         targetSdkVersion 25
         versionCode 1
@@ -29,6 +29,7 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-location:9.8.0'
     compile 'com.google.android.gms:play-services-auth:9.8.0'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
