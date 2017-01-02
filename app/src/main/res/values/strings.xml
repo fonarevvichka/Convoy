@@ -2,4 +2,6 @@
     <string name="app_name">Convoy</string>
     <string name="welcome_message">Welcome To </string>
     <string name="signed_in_fmt">Signed in as %s</string>
+    <string name="resume">resume location updates</string>
+    <string name="pause">paused</string>
 </resources>
