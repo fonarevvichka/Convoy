@@ -4,4 +4,5 @@
     <string name="signed_in_fmt">Signed in as %s</string>
     <string name="resume">resume location updates</string>
     <string name="pause">paused</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

@@ -65,6 +65,7 @@ public class loginActivity extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     @Override
+    // TODO: add logout button;
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
