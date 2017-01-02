@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +21,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 public class loginActivity extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -39,14 +42,16 @@ public class loginActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
+        setContentView(R.layout.activity_login);
 //        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
 //        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 //        mStatusTextView = (TextView) findViewById(R.id.permissions_error);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
+        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
+        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         askForAllPermissions();
@@ -61,10 +66,8 @@ public class loginActivity extends FragmentActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 //        locationOn = checkLocation();
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
+//        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+//        signInButton.setSize(SignInButton.SIZE_STANDARD);
     }
     @Override
     public void onClick(View v) {
@@ -72,7 +75,23 @@ public class loginActivity extends FragmentActivity implements
             case R.id.sign_in_button:
                 signIn();
                 break;
+            case R.id.sign_out_button:
+                signOut();
+                break;
         }
+    }
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+                        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+                    }
+                }
+
+
+        );
     }
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -107,6 +126,7 @@ public class loginActivity extends FragmentActivity implements
     private void logIn(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
 
             if (checkAllPermissions()) {
                         Intent intent = new Intent(this, mapActivity.class);

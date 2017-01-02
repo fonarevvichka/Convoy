@@ -18,13 +18,25 @@
         android:textColor="@android:color/black"
         android:textSize="14sp" />
 
-    <com.google.android.gms.common.SignInButton
+    <Button
         android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="65dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="@string/sign_in"
+        android:theme="@style/ThemeOverlay.MyDarkButton" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/sign_out"
+        android:theme="@style/ThemeOverlay.MyDarkButton" />
 
     <TextView
         android:id="@+id/welcome_text"
