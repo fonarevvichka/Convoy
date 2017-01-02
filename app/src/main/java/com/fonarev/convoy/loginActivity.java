@@ -1,13 +1,18 @@
 package com.fonarev.convoy;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -16,7 +21,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class loginActivity extends AppCompatActivity implements
+public class loginActivity extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
@@ -24,19 +29,28 @@ public class loginActivity extends AppCompatActivity implements
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
+    private LocationManager mLocationManager;
+
+//    boolean locationOn = false;
+
     private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
+//    private TextView mStatusTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
-        mStatusTextView = (TextView) findViewById(R.id.status);
+//        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
+//        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+//        mStatusTextView = (TextView) findViewById(R.id.permissions_error);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
+
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        askForAllPermissions();
+//        Log.d(TAG, "location is " + locationOn);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -46,7 +60,7 @@ public class loginActivity extends AppCompatActivity implements
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
+//        locationOn = checkLocation();
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
@@ -86,11 +100,72 @@ public class loginActivity extends AppCompatActivity implements
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
+    private void askForAllPermissions() {
+        askForPermissions();
+        checkLocation();
+    }
     private void logIn(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            Intent intent = new Intent(this, mapActivity.class);
-            startActivity(intent);
+
+            if (checkAllPermissions()) {
+                        Intent intent = new Intent(this, mapActivity.class);
+                        startActivity(intent);
+            } else {
+                Log.d(TAG, "permission and location error");
+            }
         }
+    }
+    private boolean checkAllPermissions() {
+        if (arePermissionsGranted() && isLocationEnabled())
+            return true;
+        return false;
+    }
+    private boolean checkLocation() {
+        if (!isLocationEnabled())
+            showAlert();
+        return isLocationEnabled();
+    }
+    protected void askForPermissions (){
+        // first check for permissions
+        if (!arePermissionsGranted()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                                android.Manifest.permission.INTERNET}
+                        , 10);
+            }
+        }
+        return;
+    }
+    private boolean isLocationEnabled() {
+        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+    private boolean arePermissionsGranted() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+    }
+
+        return false;
+    }
+    private void showAlert() {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Enable Location")
+                .setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " +
+                        "use this app")
+                .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(myIntent);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    }
+                });
+        dialog.show();
     }
 }
