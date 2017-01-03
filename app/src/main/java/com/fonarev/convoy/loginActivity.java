@@ -34,10 +34,7 @@ public class loginActivity extends FragmentActivity implements
 
     private LocationManager mLocationManager;
 
-//    boolean locationOn = false;
-
     private GoogleApiClient mGoogleApiClient;
-//    private TextView mStatusTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +133,7 @@ public class loginActivity extends FragmentActivity implements
             }
         }
     }
-    private boolean checkAllPermissions() {
+    public static boolean checkAllPermissions() {
         if (arePermissionsGranted() && isLocationEnabled())
             return true;
         return false;
