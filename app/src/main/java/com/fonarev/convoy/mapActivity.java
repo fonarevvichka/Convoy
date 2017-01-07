@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Camera;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
@@ -21,6 +22,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,10 +31,12 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 
 
@@ -52,17 +56,29 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
     private final int INTERVAL = 500;
     private final int FASTEST_INTERVAL = 50;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-//        FloatingActionButton(this, );
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //------------------- Centering Button -----------------//
+        FloatingActionButton centerView  = (FloatingActionButton) findViewById(R.id.center_view_button);
+
+        centerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUI(true);
+            }
+        });
+        //------------------- Centering Button -----------------//
 
 
+        //------------------- Action Bar Init ------------------//
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
         //TODO: add back button
+        //------------------- Action Bar Init ------------------//
 
         //----------- Initialize Location Stuff ----------//
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -73,37 +89,45 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mGoogleApiClient.connect();
         createLocationRequest();
-        //----------- Initialize Location Stuff ----------//
+        //--------------- Initialize Location Stuff ----------------//
 
-        //------------ Initialize Map Stuff --------------//
+        //---------------- Initialize Map Stuff --------------------//
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         Log.d("map Activity", "creating the map");
         mapFragment.getMapAsync(this);
-        //------------ Initialize Map Stuff --------------//
+        //----------------- Initialize Map Stuff -------------------//
 
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         try {
+            //---------- enable location dot and hide button -------//
             mMap.setMyLocationEnabled(true);
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+            UiSettings mUISetting = mMap.getUiSettings();
+            mUISetting.setMyLocationButtonEnabled(false);
+            //---------- enable location dot and hide button -------//
+
+            //------------- Camera Initialization ------------------//
+            mMap.setMaxZoomPreference(20);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 17));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(18));
+            //------------- Camera Initialization ------------------//
         } catch (SecurityException ex) {
             Log.d("on map ready", "security issues");
         }
     }
-    private void updateUI() {
+    private void updateUI(boolean zoom) {
         Log.d(TAG, "UI update initiated");
         if (null != mCurrentLocation) {
             latitude = Double.parseDouble(String.valueOf(mCurrentLocation.getLatitude()));
             longitude = Double.parseDouble(String.valueOf(mCurrentLocation.getLongitude()));
-
-//            Log.d(TAG, "Latitude: " + longitude);
-//            Log.d(TAG, "Longitude: " + longitude);
-            //moves camera to new user location
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+            if(zoom) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 17));
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+            }
         } else {
             Log.d(TAG, "location is null");
         }
@@ -123,7 +147,7 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Firing onLocationChanged");
         mCurrentLocation = location;
-        updateUI();
+        updateUI(false);
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
