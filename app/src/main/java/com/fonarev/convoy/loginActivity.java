@@ -124,7 +124,7 @@ public class loginActivity extends FragmentActivity implements
             findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
 
             if (checkAllPermissions()) {
-                        Intent intent = new Intent(this, locationActivity.class);
+                        Intent intent = new Intent(this, mapActivity.class);
                         startActivity(intent);
             } else {
                 Log.d(TAG, "permission and location error");
