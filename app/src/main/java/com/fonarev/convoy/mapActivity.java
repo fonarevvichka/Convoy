@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
@@ -33,11 +34,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Date;
 
-public class mapActivity extends FragmentActivity implements OnMapReadyCallback,
+public class mapActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -57,7 +56,13 @@ public class mapActivity extends FragmentActivity implements OnMapReadyCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        //TODO: re-add button to center camera
+
+//        FloatingActionButton(this, );
+
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        //TODO: add back button
 
         //----------- Initialize Location Stuff ----------//
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -83,8 +88,8 @@ public class mapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMap = googleMap;
         try {
             mMap.setMyLocationEnabled(true);
-//            googleMap.animateCamera(CameraUpdateFactory.zoomTo(1000));
             mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
         } catch (SecurityException ex) {
             Log.d("on map ready", "security issues");
         }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -25,7 +28,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-public class loginActivity extends FragmentActivity implements
+public class loginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
@@ -40,8 +43,8 @@ public class loginActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
-//        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);

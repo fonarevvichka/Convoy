@@ -5,4 +5,18 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mapActivity" />
+    tools:context=".mapActivity">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        map:backgroundTint="@color/colorAccent"
+        map:rippleColor="@color/colorPrimary"
+        android:paddingBottom="300sp"
+        map:useCompatPadding="true"
+        map:fabSize="auto" />
+
+</fragment>
+

@@ -7,5 +7,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="sign_out">Sign Out</string>
     <string name="sign_in">Sign In With Google</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
