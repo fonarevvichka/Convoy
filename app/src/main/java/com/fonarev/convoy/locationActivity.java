@@ -37,8 +37,8 @@ public class locationActivity extends FragmentActivity implements
     private Location mCurrentLocation;
 
     //    private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
-    private final int INTERVAL = 1000 * 10;
-    private final int FASTEST_INTERVAL = 1000 * 5;
+    private final int INTERVAL = 500;
+    private final int FASTEST_INTERVAL = 50;
     String mLastUpdateTime;
     Button btnFusedLocation;
 
