@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,7 +29,6 @@ public class loginActivity extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
-    //TODO: move permmision requests here to just after login
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
@@ -42,7 +42,6 @@ public class loginActivity extends FragmentActivity implements
         setContentView(R.layout.activity_login);
 //        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
 //        getSupportActionBar().setBackgroundDrawable(colorDrawable);
-//        mStatusTextView = (TextView) findViewById(R.id.permissions_error);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -95,7 +94,6 @@ public class loginActivity extends FragmentActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     @Override
-    // TODO: add logout button;
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -126,14 +124,14 @@ public class loginActivity extends FragmentActivity implements
             findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
 
             if (checkAllPermissions()) {
-                        Intent intent = new Intent(this, mapActivity.class);
+                        Intent intent = new Intent(this, locationActivity.class);
                         startActivity(intent);
             } else {
                 Log.d(TAG, "permission and location error");
             }
         }
     }
-    public static boolean checkAllPermissions() {
+    public boolean checkAllPermissions() {
         if (arePermissionsGranted() && isLocationEnabled())
             return true;
         return false;

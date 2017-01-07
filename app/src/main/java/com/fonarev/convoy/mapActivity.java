@@ -33,6 +33,7 @@ public class mapActivity extends FragmentActivity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
 //        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
 //        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
