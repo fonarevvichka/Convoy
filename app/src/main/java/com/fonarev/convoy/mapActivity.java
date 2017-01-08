@@ -59,7 +59,6 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         //------------------- Centering Button -----------------//
@@ -72,7 +71,6 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
         //------------------- Centering Button -----------------//
-
 
         //------------------- Action Bar Init ------------------//
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#ff757575"));
