@@ -45,16 +45,18 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private final String TAG = "map Activity";
-    private GoogleMap mMap;
+    private final String TAG = "mapActivity";
 
+    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    boolean update = true;
+
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private double latitude = 41.1, longitude = -95.0;
 
-    private final int INTERVAL = 500;
-    private final int FASTEST_INTERVAL = 50;
+    private final int INTERVAL = 750;
+    private final int FASTEST_INTERVAL = 100;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +65,11 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         //------------------- Centering Button -----------------//
         FloatingActionButton centerView  = (FloatingActionButton) findViewById(R.id.center_view_button);
-
         centerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                update = true;
+//                Log.d(TAG, "update =" + update);
                 updateUI(true);
             }
         });
@@ -109,20 +112,35 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             //------------- Camera Initialization ------------------//
             mMap.setMaxZoomPreference(20);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 17));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(18));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18));
             //------------- Camera Initialization ------------------//
         } catch (SecurityException ex) {
             Log.d("on map ready", "security issues");
         }
     }
     private void updateUI(boolean zoom) {
-        Log.d(TAG, "UI update initiated");
+
+//        Log.d(TAG, "UI update initiated");
         if (null != mCurrentLocation) {
             latitude = Double.parseDouble(String.valueOf(mCurrentLocation.getLatitude()));
             longitude = Double.parseDouble(String.valueOf(mCurrentLocation.getLongitude()));
+
             if(zoom) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 17));
+                Log.d(TAG, "animation started");
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18), 2000, new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        //TODO: make this set a variable that wont let other stuff happen until the animation says thats its done in the onFinish method
+                        //TODO: Check if it goes into this method call first
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+
+                Log.d(TAG,"animation done");
             } else {
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
             }
@@ -135,17 +153,25 @@ public class mapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-        Log.d(TAG, "om start");
+        Log.d(TAG, "on start");
     }
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-    } @Override
+    }
+    @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "Firing onLocationChanged");
+//        Log.d(TAG, "Firing onLocationChanged");
         mCurrentLocation = location;
-        updateUI(false);
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                update = false;
+            }
+        });
+        if(update)
+            updateUI(false);
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
